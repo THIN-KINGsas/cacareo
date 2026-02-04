@@ -4,6 +4,7 @@ import { ShoppingCart, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { useCart } from "@/contexts/cart-context"
 
 interface ComboItem {
   id: string
@@ -23,11 +24,27 @@ interface CombosProps {
   combos?: ComboItem[]
 }
 
+function parsePrice(priceStr: string): number {
+  return parseInt(priceStr.replace(/[^0-9]/g, ""), 10)
+}
+
 export function Combos({ 
   title = "Nuestros Combos", 
   subtitle = "Disfruta el pollo que más sabe con nuestras mejores ofertas",
   combos = [] 
 }: CombosProps) {
+  const { addItem, setCartOpen } = useCart()
+
+  const handleAddToCart = (combo: ComboItem) => {
+    addItem({
+      id: combo.id,
+      name: combo.name,
+      price: parsePrice(combo.price),
+      description: combo.description,
+    })
+    setCartOpen(true)
+  }
+
   return (
     <section
       id="menu"
@@ -136,9 +153,12 @@ export function Combos({
                 </div>
               </CardContent>
 
-              {/* 🛒 Acción */}
+              {/* Accion */}
               <CardFooter className="p-5 pt-0">
-                <Button className="w-full gap-2 bg-secondary text-secondary-foreground shadow-lg transition hover:scale-[1.02] hover:bg-secondary/90">
+                <Button 
+                  className="w-full gap-2 bg-secondary text-secondary-foreground shadow-lg transition hover:scale-[1.02] hover:bg-secondary/90"
+                  onClick={() => handleAddToCart(combo)}
+                >
                   <ShoppingCart className="h-4 w-4" />
                   Agregar
                 </Button>
