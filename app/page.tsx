@@ -1,3 +1,5 @@
+"use client"
+
 import { Header } from "@/components/cacareo/header"
 import { Hero } from "@/components/cacareo/hero"
 import { Combos } from "@/components/cacareo/combos"
@@ -5,6 +7,10 @@ import { Novedades } from "@/components/cacareo/novedades"
 import { AppDownload } from "@/components/cacareo/app-download"
 import { RestaurantFinder } from "@/components/cacareo/restaurant-finder"
 import { Footer } from "@/components/cacareo/footer"
+import { CartSidebar } from "@/components/cacareo/cart-sidebar"
+import { CheckoutModal } from "@/components/cacareo/checkout-modal"
+import { TableOrderModal } from "@/components/cacareo/table-order-modal"
+import { CartProvider } from "@/contexts/cart-context"
 
 // Datos que pueden ser alimentados por IA o API
 const heroPromotions = [
@@ -137,6 +143,7 @@ const restaurantsData = [
 
 export default function HomePage() {
   return (
+    <CartProvider>
     <main className="min-h-screen">
       <Header 
         navItems={[
@@ -186,6 +193,12 @@ export default function HomePage() {
           address: "Bogotá, Colombia",
         }}
       />
+      
+      {/* Order Flow Modals */}
+      <CartSidebar />
+      <CheckoutModal />
+      <TableOrderModal />
     </main>
+    </CartProvider>
   )
 }

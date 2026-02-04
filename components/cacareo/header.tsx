@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { Menu, X, MapPin, User, ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useCart } from "@/contexts/cart-context"
 
 interface NavItem {
   label: string
@@ -25,6 +26,7 @@ const defaultNavItems: NavItem[] = [
 
 export function Header({ navItems = defaultNavItems, logoUrl }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { totalItems, setCartOpen } = useCart()
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-gradient-to-r from-primary/80 via-primary/70 to-primary/80 backdrop-blur-xl">
@@ -85,9 +87,17 @@ export function Header({ navItems = defaultNavItems, logoUrl }: HeaderProps) {
             <User className="h-5 w-5" />
           </Button>
 
-          <Button className="gap-2 bg-gradient-to-r from-secondary to-secondary/80 text-secondary-foreground shadow-lg hover:shadow-secondary/40 transition-all hover:scale-[1.03]">
+          <Button 
+            className="relative gap-2 bg-gradient-to-r from-secondary to-secondary/80 text-secondary-foreground shadow-lg hover:shadow-secondary/40 transition-all hover:scale-[1.03]"
+            onClick={() => setCartOpen(true)}
+          >
             <ShoppingCart className="h-4 w-4" />
             Pedir ahora
+            {totalItems > 0 && (
+              <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-xs font-bold text-background">
+                {totalItems}
+              </span>
+            )}
           </Button>
         </div>
 
@@ -128,9 +138,20 @@ export function Header({ navItems = defaultNavItems, logoUrl }: HeaderProps) {
                 Iniciar sesión
               </Button>
 
-              <Button className="w-full gap-3 bg-gradient-to-r from-secondary to-secondary/80 text-secondary-foreground">
+              <Button 
+                className="relative w-full gap-3 bg-gradient-to-r from-secondary to-secondary/80 text-secondary-foreground"
+                onClick={() => {
+                  setCartOpen(true)
+                  setIsMenuOpen(false)
+                }}
+              >
                 <ShoppingCart className="h-4 w-4" />
                 Pedir ahora
+                {totalItems > 0 && (
+                  <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-xs font-bold text-background">
+                    {totalItems}
+                  </span>
+                )}
               </Button>
             </div>
           </nav>
